@@ -1,0 +1,57 @@
+# Node modules and dependencies (if using npm or yarn)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build directories and files
+dist/
+build/
+
+# Temporary files and logs
+*.log
+*.tmp
+*.temp
+*.swp
+*.DS_Store
+Thumbs.db
+
+# macOS-specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS-specific directories
+__MACOSX/
+
+# macOS Finder-specific files
+.DS_Store
+Icon?
+._*
+
+# IDE/editor-specific files
+.vscode/
+.idea/
+*.iml
+
+# Sensitive files (e.g., API keys, local settings)
+.env
+.env.local
+
+# Chrome Extension files to exclude
+*.crx
+*.pem
+
+# Miscellaneous system files
+*.bak
+*.~*
+*.orig
+
+# Coverage reports (if testing tools are used)
+coverage/
+
+# Output of web bundlers (if used, like Webpack)
+webpack.config.js
+*.map
+
+# If using SASS/SCSS
+*.sass-cache
