@@ -1,20 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Your Chrome Extension Name",
+  "name": "AZ AI",
   "version": "0.1",
-  "author": "First Last",
-  "description": "A description about your Chrome Extension...",
+  "author": "Suraj Kumar Gupta",
+  "description": "A Chrome Extension that solves doubts on AZ",
   "permissions": [
-    ""
+    "storage",
+    "tabs"
   ],
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "https://maang.in/*"
       ],
+      "css": ["style.css"],
       "js": [
         "content.js"
-      ]
+      ],
+      "type": "module"
     }
   ],
   "background": {
@@ -22,17 +25,20 @@
   },
   "web_accessible_resources" : [
     {
-      "resources": [],
+      "resources": [
+        "assets/*",
+        "scripts/*"
+      ],
       "matches" : ["<all_urls>"]
     }
   ],
   "action": {
     "default_icon": {
-      "16": "logo.png",
-      "24": "logo.png",
-      "32": "logo.png"
+      "16": "assets/AZlogo.png",
+      "24": "assets/AZlogo.png",
+      "32": "assets/AZlogo.png"
     },
     "default_popup": "index.html",
-    "default_title": "A tooltip popup description when you hover over the Chrome Extension icon."
+    "default_title": "AZ AI"
   }
 }
