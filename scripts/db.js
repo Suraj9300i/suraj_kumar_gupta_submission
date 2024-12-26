@@ -2,7 +2,7 @@
 
 export default class ChatDatabase {
   constructor() {
-    this.dbName = "ChatDB";
+    this.dbName = "https://maang.in";
     this.db = null;
     this.storeName;
   }
