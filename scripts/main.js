@@ -2,7 +2,7 @@
 
 import ChatDatabase from "./db.js";
 import { addAiTab } from "./chat.js";
-import { getProblemName } from "./utility.js";
+import { getProblemName, saveProblem } from "./utility.js";
 
 let currentProblemName = getProblemName(window.location.href);
 
@@ -34,6 +34,13 @@ function initObserver() {
     subtree: true
   });
 }
+
+window.addEventListener("xhrDataFetched",(event)=>{
+  const response = event.detail;
+  if(response.url.startsWith("https://api2.maang.in/problems/user/401")){
+    saveProblem(response.response);
+  }
+});
 
 startConnection(currentProblemName);
 initObserver();

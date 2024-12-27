@@ -13,6 +13,14 @@ export function scrollToBottom(container) {
   });
 }
 
+export function saveProblem(data){
+  window.localStorage.setItem("problem_description", data);
+}
+
+export function getProblem(){
+  return JSON.parse(window.localStorage.getItem("problem_description"));
+}
+
 export function formatCode(code, language) {
   let formattedCode = code;
 

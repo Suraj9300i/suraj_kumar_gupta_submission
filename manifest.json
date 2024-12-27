@@ -6,7 +6,11 @@
   "description": "A Chrome Extension that solves doubts on AZ",
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "webRequest",
+    "scripting"
+  ],
+  "host_permissions": [
   ],
   "content_scripts": [
     {
@@ -27,7 +31,8 @@
     {
       "resources": [
         "assets/*",
-        "scripts/*"
+        "scripts/*",
+        "scripts/interceptor.js"
       ],
       "matches" : ["<all_urls>"]
     }
