@@ -1,6 +1,10 @@
+import { getProblem } from "./utility.js";
+
 const apiUrl = "http://localhost:3000/chat";
 
 function getProblemContext() {
+  const data = getProblem();
+  console.log(data);
   return {
     problemExplanation:
       "Given an array of integers, find the maximum sum of a contiguous subarray.",
@@ -39,7 +43,7 @@ function getBotResponse(userMessage) {
           message: userMessage
         })
       });
-      
+
       if (!response || response.status != 200) {
         reject(`API request failed with status ${response.status}`);
         return;

@@ -1,32 +1,59 @@
 "use strict";
 
 import ChatDatabase from "./db.js";
-import { addAiTab } from "./chat.js";
-import { getProblemName, saveProblem } from "./utility.js";
+import { getProblemName, saveProblem, isOnProblemRoute } from "./utility.js";
+import { addBot, removeBot } from "./bot.js";
 
-let currentProblemName = getProblemName(window.location.href);
+let currentProblemName = "";
 
-function startConnection(storeName) {
+async function connectDB(problemName) {
+  console.log(`Problem changed to: ${problemName}`);
   const database = new ChatDatabase();
-  database.init(storeName);
-  addAiTab(database);
+
+  return database
+    .init(problemName)
+    .then(() => {
+      console.log(`DB init success for store: ${problemName}`);
+      return database;
+    })
+    .catch(err => {
+      console.error(`Error initializing DB for ${problemName}:`, err);
+      throw err;
+    });
 }
 
-function handleProblemNameChange(problemName) {
-  console.log(`Problem changed to: ${problemName}`);
-  startConnection(problemName);
+function checkAndInitOrReset() {
+  if (isOnProblemRoute()) {
+    const newProblemName = getProblemName(window.location.href);
+    if (!currentProblemName) {
+      currentProblemName = newProblemName;
+      connectDB(newProblemName)
+        .then(db => {
+          addBot(db);
+        })
+        .catch(err => console.error(err));
+    } else if (newProblemName !== currentProblemName) {
+      currentProblemName = newProblemName;
+      const db = connectDB(newProblemName);
+      removeBot();
+
+      connectDB(newProblemName)
+        .then(db => {
+          addBot(db);
+        })
+        .catch(err => console.error(err));
+    }
+  } else {
+    currentProblemName = "";
+    removeBot();
+  }
 }
 
 function initObserver() {
+  checkAndInitOrReset();
+
   const observer = new MutationObserver(() => {
-    const newProblemName = getProblemName(window.location.href);
-
-    if (newProblemName !== currentProblemName) {
-      console.log(`Problem name changed: ${newProblemName}`);
-      currentProblemName = newProblemName;
-
-      handleProblemNameChange(newProblemName);
-    }
+    checkAndInitOrReset();
   });
 
   observer.observe(document.body, {
@@ -35,12 +62,11 @@ function initObserver() {
   });
 }
 
-window.addEventListener("xhrDataFetched",(event)=>{
+window.addEventListener("xhrDataFetched", event => {
   const response = event.detail;
-  if(response.url.startsWith("https://api2.maang.in/problems/user/401")){
+  if (response.url.startsWith("https://api2.maang.in/problems/user/")) {
     saveProblem(response.response);
   }
 });
 
-startConnection(currentProblemName);
 initObserver();

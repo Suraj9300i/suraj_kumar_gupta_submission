@@ -15,7 +15,7 @@ try {
   head.insertBefore(mainScript, head.lastChild);
   head.insertBefore(interceptorScript, head.lastChild);
 
-  console.log("Main script injected successfully.");
+  console.log("Script injected successfully.");
 } catch (error) {
   console.error("Failed to inject script:", error);
 }

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 export default class ChatDatabase {
   constructor() {
@@ -23,8 +23,13 @@ export default class ChatDatabase {
           } else {
             db.close();
             console.log(`Store "${storeName}" does not exist. Adding store...`);
-            this.db = await this.addStore(storeName);
-            resolve(this.db);
+
+            this.addStore(storeName)
+              .then(newDb => {
+                this.db = newDb;
+                resolve(newDb);
+              })
+              .catch(err => reject(err));
           }
         };
 
@@ -42,39 +47,39 @@ export default class ChatDatabase {
   async addStore(storeName) {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName);
-  
+
       request.onsuccess = event => {
         const db = event.target.result;
         const currentVersion = db.version;
         db.close();
-  
+
         const upgradeRequest = indexedDB.open(this.dbName, currentVersion + 1);
-  
-        upgradeRequest.onupgradeneeded = event => {
-          const upgradeDb = event.target.result;
-  
+
+        upgradeRequest.onupgradeneeded = event2 => {
+          const upgradeDb = event2.target.result;
           if (!upgradeDb.objectStoreNames.contains(storeName)) {
-            const objectStore = upgradeDb.createObjectStore(storeName, {
+            upgradeDb.createObjectStore(storeName, {
               keyPath: "id",
-              autoIncrement: true,
+              autoIncrement: true
             });
             console.log(`Store "${storeName}" created with keyPath "id".`);
           }
         };
-  
-        upgradeRequest.onsuccess = event => {
+
+        upgradeRequest.onsuccess = event2 => {
           console.log(
-            `Database upgraded to version ${currentVersion + 1}. Store "${storeName}" added.`
+            `Database upgraded to version ${currentVersion +
+              1}. Store "${storeName}" added.`
           );
-          resolve(event.target.result);
+          resolve(event2.target.result);
         };
-  
-        upgradeRequest.onerror = event => {
-          console.error("Error upgrading database:", event.target.error);
-          reject(event.target.error);
+
+        upgradeRequest.onerror = event2 => {
+          console.error("Error upgrading database:", event2.target.error);
+          reject(event2.target.error);
         };
       };
-  
+
       request.onerror = event => {
         console.error("Error opening database:", event.target.error);
         reject(event.target.error);
@@ -88,11 +93,7 @@ export default class ChatDatabase {
         return reject("Database is not initialized.");
       }
 
-      if (
-        typeof message !== "object" ||
-        !message.text ||
-        !message.type
-      ) {
+      if (typeof message !== "object" || !message.text || !message.type) {
         console.error("Invalid message format:", message);
         return reject("Invalid message format:");
       }
@@ -138,4 +139,3 @@ export default class ChatDatabase {
     });
   }
 }
-

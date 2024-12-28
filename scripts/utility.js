@@ -1,5 +1,9 @@
 'use-strict'
 
+export function isOnProblemRoute() {
+  return /^https:\/\/maang\.in\/problems\//.test(window.location.href);
+}
+
 export function getProblemName(url) {
   const urlObj = new URL(url);
   const pathParts = urlObj.pathname.split("/");
