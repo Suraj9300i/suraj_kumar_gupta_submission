@@ -126,7 +126,7 @@ export async function addBot(database) {
     chatbotMessages.appendChild(loadingMessageElement);
 
     try {
-      const res = await getBotResponse(userText);
+      const res = await getBotResponse(database, userText);
 
       if (res && res.status === "success") {
         const botResponse = res.data.queryAnswer;
@@ -164,7 +164,7 @@ export async function addBot(database) {
 
         chatbotMessages.appendChild(botMessageElement);
 
-        await database.addMessage({ type: "bot", text: botResponse });
+        await database.addMessage({ type: "model", text: botResponse });
       } else {
         throw new Error("Failed to get a successful response.");
       }
@@ -182,7 +182,7 @@ export async function addBot(database) {
       chatbotMessages.appendChild(errorMessageElement);
 
       await database.addMessage({
-        type: "bot",
+        type: "model",
         text: "Something went wrong. Please try again."
       });
     }

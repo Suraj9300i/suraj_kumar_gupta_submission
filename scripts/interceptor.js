@@ -1,24 +1,24 @@
 (function() {
-    const originalOpen = XMLHttpRequest.prototype.open;
-    const originalSend = XMLHttpRequest.prototype.send;
+  const originalOpen = XMLHttpRequest.prototype.open;
+  const originalSend = XMLHttpRequest.prototype.send;
 
-    XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-        this._url = url;
-        return originalOpen.apply(this, arguments);
-    };
+  XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+    this._url = url;
+    return originalOpen.apply(this, arguments);
+  };
 
-    XMLHttpRequest.prototype.send = function(body) {
-        this.addEventListener("load", function() {
-            const data = {
-                url: this._url,
-                status: this.status,
-                response: this.responseText,
-            };
+  XMLHttpRequest.prototype.send = function(body) {
+    this.addEventListener("load", function() {
+      const data = {
+        url: this._url,
+        status: this.status,
+        response: this.responseText
+      };
 
-            // Dispatch a custom event with the data
-            window.dispatchEvent(new CustomEvent("xhrDataFetched", { detail: data }));
-        });
+      // Dispatch a custom event with the data
+      window.dispatchEvent(new CustomEvent("xhrDataFetched", { detail: data }));
+    });
 
-        return originalSend.apply(this, arguments);
-    };
+    return originalSend.apply(this, arguments);
+  };
 })();

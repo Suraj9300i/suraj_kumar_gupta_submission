@@ -12,11 +12,14 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
-    "openai": "^4.77.0"
+    "netlify-cli": "^17.38.1",
+    "netlify-lambda": "^2.0.16",
+    "openai": "^4.77.0",
+    "serverless-http": "^3.2.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "./node_modules/.bin/netlify-lambda serve src",
+    "build": "./node_modules/.bin/netlify-lambda build src"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

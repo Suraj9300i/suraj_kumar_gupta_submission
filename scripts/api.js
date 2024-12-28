@@ -1,35 +1,48 @@
-import { getProblem } from "./utility.js";
+import { getCurrentProblemCode, getProblem } from "./utility.js";
 
 const apiUrl = "http://localhost:3000/chat";
 
 function getProblemContext() {
-  const data = getProblem();
-  console.log(data);
+  const problem = getProblem();
+  const userCode = getCurrentProblemCode();
+
   return {
-    problemExplanation:
-      "Given an array of integers, find the maximum sum of a contiguous subarray.",
-    inputFormat:
-      "An integer N (size of array) followed by N integers (elements of the array).",
-    outputFormat:
-      "An integer representing the maximum sum of a contiguous subarray.",
-    hints: "Use a single loop and maintain running sums.",
-    editorial:
-      "Iterate through the array, maintaining a running sum and updating the maximum sum found so far.",
-    correctSolution:
-      "int maxSubArray(int[] nums) { int maxSum = nums[0], currentSum = nums[0]; for (int i = 1; i < nums.length; i++) { currentSum = Math.max(nums[i], currentSum + nums[i]); maxSum = Math.max(maxSum, currentSum); } return maxSum; }"
+    problemExplanation: problem?.data?.body,
+    inputFormat : problem?.data?.input_format,
+    outputFormat : problem?.data?.output_format,
+    hints : problem?.data?.hints,
+    editorial: problem?.data?.hints?.solution_approach,
+    correctSolution: problem?.data?.editorial_code[problem.data.editorial_code.length - 1]?.code,
+    userCode: userCode
   };
 }
 
-function getPreviousMessage() {
+async function getPreviousMessage(database) {
+  const dbMessages = await database.getAllMessages();
+  const lastMessages = 7;
+  console.log("DB Messages: ", dbMessages);
   const messages = [];
-  messages.push({
-    role: "user",
-    parts: [{ text: "Can you explain Kadane's Algorithm?" }]
-  });
+  if(dbMessages.length > lastMessages){
+    const temp = dbMessages.slice(-lastMessages);
+    for(let i=0; i<lastMessages; i++){
+      messages.unshift({
+        role: temp[i].type,
+        parts: [{ text: temp[i].text }]
+      });
+    }
+  }
+  else{
+    for(let i=0; i<dbMessages.length; i++){
+      messages.push({
+        role: dbMessages[i].type,
+        parts: [{ text: dbMessages[i].text }]
+      });
+    }
+  }
   return messages;
 }
 
-function getBotResponse(userMessage) {
+async function getBotResponse(database, userMessage) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(apiUrl, {
@@ -39,7 +52,7 @@ function getBotResponse(userMessage) {
         },
         body: JSON.stringify({
           problemContext: getProblemContext(),
-          history: getPreviousMessage(),
+          history: await getPreviousMessage(database),
           message: userMessage
         })
       });

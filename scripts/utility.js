@@ -1,36 +1,73 @@
-'use-strict'
+"use-strict";
 
 export function isOnProblemRoute() {
   return /^https:\/\/maang\.in\/problems\//.test(window.location.href);
 }
 
-export function getProblemName(url) {
+export function getProblemName() {
+  const url = window.location.href;
   const urlObj = new URL(url);
   const pathParts = urlObj.pathname.split("/");
   return pathParts[pathParts.length - 1];
 }
 
+export function getCurrentProblemCode() {
+  const problemName = getProblemName();
+  const parts = problemName.split("-");
+  const problemId = parts[parts.length - 1];
+  // const userId = getUserDetails()?.data?.id;
+  const elem = document.querySelector('.d-flex.align-items-center.gap-1.text-blue-dark');
+  const language = elem?.textContent.trim(); 
+
+  const problemLCId =  "course_" + "#"+ "_" + problemId + "_" + language;
+  const matchedValue = getLocalStorageValueByPartialKey(problemLCId);
+  return matchedValue;
+}
+
 export function scrollToBottom(container) {
   container.scrollTo({
     top: container.scrollHeight,
-    behavior: "smooth",
+    behavior: "smooth"
   });
 }
 
-export function saveProblem(data){
-  window.localStorage.setItem("problem_description", data);
+export function saveProblem(data) {
+  window.localStorage.setItem("ai_extension_problem_description", data);
 }
 
-export function getProblem(){
-  return JSON.parse(window.localStorage.getItem("problem_description"));
+export function getProblem() {
+  return JSON.parse(
+    window.localStorage.getItem("ai_extension_problem_description")
+  );
+}
+
+export function saveUserDetails(data) {
+  window.localStorage.setItem("ai_extension_user_details", data);
+}
+
+export function getUserDetails() {
+  return JSON.parse(window.localStorage.getItem("ai_extension_user_details"));
+}
+
+function getLocalStorageValueByPartialKey(partialKey) {
+  const list1 = partialKey.split("_");
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const list2 = key.split("_");
+    if (list1[0] === list2[0] && list1[2] === list2[2] && list1[3] === list2[3]) {
+      return localStorage.getItem(key);
+    }
+  }
+  return null;
 }
 
 export function formatCode(code, language) {
   let formattedCode = code;
 
   formattedCode = formattedCode
-    .replace(/\r\n/g, '\n')
-    .replace(/\n\s*\n/g, '\n')
+    .replace(/\r\n/g, "\n")
+    .replace(/\n\s*\n/g, "\n")
     .trim();
 
   let indentLevel = 0;
@@ -44,35 +81,48 @@ export function formatCode(code, language) {
         .replace(/\}/g, "\n}")
         .replace(/\;/g, ";\n");
 
-        formattedCode = formattedCode.split("\n").map(line => {
-            if (line.includes("{")) {
-              const indentedLine = indent.repeat(indentLevel) + line.trim();
-              indentLevel++;
-              return indentedLine;
-            } else if (line.includes("}")) {
-              indentLevel--;
-              return indent.repeat(indentLevel) + line.trim();
-            } else {
-              return indent.repeat(indentLevel) + line.trim();
-            }
-          }).join("\n");
-          formattedCode = formattedCode.replace(/(\}\n\s*)(public|private|protected|static|void|int|String|boolean|float|double|class|namespace)\s/g, "$1\n$2 ");
+      formattedCode = formattedCode
+        .split("\n")
+        .map(line => {
+          if (line.includes("{")) {
+            const indentedLine = indent.repeat(indentLevel) + line.trim();
+            indentLevel++;
+            return indentedLine;
+          } else if (line.includes("}")) {
+            indentLevel--;
+            return indent.repeat(indentLevel) + line.trim();
+          } else {
+            return indent.repeat(indentLevel) + line.trim();
+          }
+        })
+        .join("\n");
+      formattedCode = formattedCode.replace(
+        /(\}\n\s*)(public|private|protected|static|void|int|String|boolean|float|double|class|namespace)\s/g,
+        "$1\n$2 "
+      );
       break;
     case "python":
       formattedCode = formattedCode.replace(/\:/g, ":\n");
-      formattedCode = formattedCode.split("\n").map(line => {
-        if (line.endsWith(":")) {
-          const indentedLine = indent.repeat(indentLevel) + line.trim();
-          indentLevel++;
-          return indentedLine;
-        } else if (line.trim().startsWith("return") || line.trim().startsWith("pass") || line.trim().startsWith("break") || line.trim().startsWith("continue")) {
+      formattedCode = formattedCode
+        .split("\n")
+        .map(line => {
+          if (line.endsWith(":")) {
+            const indentedLine = indent.repeat(indentLevel) + line.trim();
+            indentLevel++;
+            return indentedLine;
+          } else if (
+            line.trim().startsWith("return") ||
+            line.trim().startsWith("pass") ||
+            line.trim().startsWith("break") ||
+            line.trim().startsWith("continue")
+          ) {
             indentLevel = Math.max(0, indentLevel - 1);
             return indent.repeat(indentLevel) + line.trim();
-        }
-         else {
-          return indent.repeat(indentLevel) + line.trim();
-        }
-      }).join("\n");
+          } else {
+            return indent.repeat(indentLevel) + line.trim();
+          }
+        })
+        .join("\n");
 
       break;
     default:
@@ -80,6 +130,9 @@ export function formatCode(code, language) {
       return code;
   }
 
-  formattedCode = formattedCode.split('\n').map(line => line.trimEnd()).join('\n');
+  formattedCode = formattedCode
+    .split("\n")
+    .map(line => line.trimEnd())
+    .join("\n");
   return formattedCode.trim();
 }

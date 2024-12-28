@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const serverless = require("serverless-http");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 
 const app = express();
+const router = express.Router();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -13,11 +15,17 @@ const API_KEY = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-app.get("/", (req, res) => {
-  res.send("Hello, World! The server is working.");
+router.get("/", (req, res) => {
+  res.send("Hello! The server is working.");
 });
 
-app.post("/chat", async (req, res) => {
+router.get("/test", (req, res) => {
+  res.status((200)).json({
+    message : "TEST"
+  });
+});
+
+router.post("/chat", async (req, res) => {
   const { problemContext, history, message } = req.body;
 
   if (!problemContext || !history || !message) {
@@ -163,6 +171,7 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.use(`/.netlify/functions/api`, router);
+
+module.exports = app;
+module.exports.handler = serverless(app);

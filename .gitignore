@@ -57,3 +57,5 @@ webpack.config.js
 *.sass-cache
 
 test/
+# Local Netlify folder
+.netlify
