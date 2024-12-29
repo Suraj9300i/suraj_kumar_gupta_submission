@@ -152,8 +152,6 @@ router.post("/chat", async (req, res) => {
       .replace(/[\x00-\x1F\x7F-\x9F]/g, "")
       .replace(/\\(?![\\/bfnrtu"])/g, "");
 
-      console.log("raw: ". rawResponse);
-
     let parsedResponse = JSON.parse(response);
 
     try{

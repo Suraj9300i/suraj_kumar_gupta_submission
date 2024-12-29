@@ -4,37 +4,23 @@
   "version": "0.1",
   "author": "Suraj Kumar Gupta",
   "description": "A Chrome Extension that solves doubts on AZ",
-  "permissions": [
-    "storage",
-    "tabs",
-    "webRequest",
-    "scripting"
-  ],
-  "host_permissions": [
-  ],
+  "permissions": ["storage", "tabs", "webRequest", "scripting"],
+  "host_permissions": [],
   "content_scripts": [
     {
-      "matches": [
-        "https://maang.in/*"
-      ],
+      "matches": ["https://maang.in/*"],
       "css": ["style.css"],
-      "js": [
-        "content.js"
-      ],
+      "js": ["content.js"],
       "type": "module"
     }
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "web_accessible_resources" : [
+  "web_accessible_resources": [
     {
-      "resources": [
-        "assets/*",
-        "scripts/*",
-        "scripts/interceptor.js"
-      ],
-      "matches" : ["<all_urls>"]
+      "resources": ["assets/*", "scripts/*", "scripts/interceptor.js"],
+      "matches": ["<all_urls>"]
     }
   ],
   "action": {

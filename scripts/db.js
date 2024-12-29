@@ -106,7 +106,6 @@ export default class ChatDatabase {
       });
 
       request.onsuccess = () => {
-        console.log("Chat message added:", message);
         resolve();
       };
 
@@ -128,7 +127,6 @@ export default class ChatDatabase {
       const request = store.getAll();
 
       request.onsuccess = event => {
-        console.log("Fetched all chat messages:", event.target.result);
         resolve(event.target.result);
       };
 

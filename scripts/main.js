@@ -69,7 +69,6 @@ function initObserver() {
 
 window.addEventListener("xhrDataFetched", event => {
   const response = event.detail;
-  console.log("url: ", response.url);
 
   if (response.url.startsWith("https://api2.maang.in/problems/user/")) {
     saveProblem(response.response);
@@ -84,6 +83,5 @@ initObserver();
 
 const originalOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(method, url, ...rest) {
-  console.log("Patched XHR open:", url);
   return originalOpen.apply(this, [method, url, ...rest]);
 };

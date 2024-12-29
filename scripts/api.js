@@ -20,7 +20,6 @@ function getProblemContext() {
 async function getPreviousMessage(database) {
   const dbMessages = await database.getAllMessages();
   const lastMessages = 7;
-  console.log("DB Messages: ", dbMessages);
   const messages = [];
   if(dbMessages.length > lastMessages){
     const temp = dbMessages.slice(-lastMessages);

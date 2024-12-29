@@ -20,8 +20,20 @@ export function getCurrentProblemCode() {
   const language = elem?.textContent.trim(); 
 
   const problemLCId =  "course_" + "#"+ "_" + problemId + "_" + language;
-  const matchedValue = getLocalStorageValueByPartialKey(problemLCId);
+  const matchedValue = localStorage.getItem(getCodeKey(problemLCId));
   return matchedValue;
+}
+
+export function setCurrentProblemCode(code) {
+  const problemName = getProblemName();
+  const parts = problemName.split("-");
+  const problemId = parts[parts.length - 1];
+  // const userId = getUserDetails()?.data?.id;
+  const elem = document.querySelector('.d-flex.align-items-center.gap-1.text-blue-dark');
+  const language = elem?.textContent.trim(); 
+
+  const problemLCId =  "course_" + "#"+ "_" + problemId + "_" + language;
+  localStorage.setItem(getCodeKey(problemLCId), code);
 }
 
 export function scrollToBottom(container) {
@@ -49,17 +61,17 @@ export function getUserDetails() {
   return JSON.parse(window.localStorage.getItem("ai_extension_user_details"));
 }
 
-function getLocalStorageValueByPartialKey(partialKey) {
+function getCodeKey(partialKey) {
   const list1 = partialKey.split("_");
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     const list2 = key.split("_");
     if (list1[0] === list2[0] && list1[2] === list2[2] && list1[3] === list2[3]) {
-      return localStorage.getItem(key);
+      return key;
     }
   }
-  return null;
+  return "";
 }
 
 export function formatCode(code, language) {
@@ -135,4 +147,14 @@ export function formatCode(code, language) {
     .map(line => line.trimEnd())
     .join("\n");
   return formattedCode.trim();
+}
+
+
+export function encodeHtml(code) {
+  return code
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
 }

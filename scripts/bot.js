@@ -1,5 +1,5 @@
 "use strict";
-import { formatCode, scrollToBottom } from "./utility.js";
+import { encodeHtml, formatCode, scrollToBottom, setCurrentProblemCode } from "./utility.js";
 import { getBotResponse } from "./api.js";
 
 let chatbotIcon = null;
@@ -58,6 +58,7 @@ export async function addBot(database) {
           .join("")}
     `;
   }
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
   // Input
   chatbotInput = document.createElement("div");
@@ -109,6 +110,8 @@ export async function addBot(database) {
     userMsgPara.textContent = userText;
     chatbotMessages.appendChild(userMsgPara);
 
+    scrollToBottom(chatbotMessages);
+
     // Clear input
     inputField.value = "";
 
@@ -125,6 +128,8 @@ export async function addBot(database) {
 
     chatbotMessages.appendChild(loadingMessageElement);
 
+    scrollToBottom(chatbotMessages);
+
     try {
       const res = await getBotResponse(database, userText);
 
@@ -134,7 +139,7 @@ export async function addBot(database) {
         chatbotMessages.removeChild(loadingMessageElement);
 
         const botMessageElement = document.createElement("div");
-        botMessageElement.className = "chat-message-bot";
+        botMessageElement.className = "chat-message-model";
         const queryMessage = document.createElement("p");
         queryMessage.textContent = botResponse;
         botMessageElement.appendChild(queryMessage);
@@ -146,23 +151,50 @@ export async function addBot(database) {
           res.data.aiRecommendations.forEach((recommendation) => {
             const recommendationBox = document.createElement("div");
             recommendationBox.className = "recommendation-container";
+          
+            const recommendationHTML = `
+              <div class="recommendation">
+                <p class="recommendation-text">${recommendation.text}</p>
+                <div class="code-block">
+                  <pre><code class="language-cpp">${encodeHtml(formatCode(recommendation.code, "cpp"))}</code></pre>
+                </div>
+              </div>
+            `;
+          
+            recommendationBox.innerHTML = recommendationHTML;
+          
+            const button = document.createElement("button");
+            button.textContent = "Copy";
+            button.className = "copy-button";
+            button.addEventListener("click", () => {
+              setCurrentProblemCode(recommendation.code);
+            });
 
-            recommendationBox.innerHTML = `
-          <div class="recommendation">
-            <p class="recommendation-text">${recommendation.text}</p>
-            <div class="code-block">
-              <pre><code>
-              ${formatCode(recommendation.code, "cpp")}
-              </code></pre>
-              <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
-            </div>
-          </div>
-        `;
+            button.addEventListener("click", () => {
+              if (navigator.clipboard) {
+                  navigator.clipboard.writeText(recommendation.code)
+                      .then(() => {
+                        button.textContent = "Copied!";
+                        button.className = "copy-button copied";
+        
+                        setTimeout(() => {
+                            button.textContent = "Copy";
+                            button.className = "copy-button";
+                        }, 1000);
+                      })
+              } else {
+                  console.log('Clipboard API not available.');
+              }
+          });
+          
+            recommendationBox.querySelector(".code-block").appendChild(button);
+          
             botMessageElement.appendChild(recommendationBox);
           });
         }
 
         chatbotMessages.appendChild(botMessageElement);
+        scrollToBottom(chatbotMessages);
 
         await database.addMessage({ type: "model", text: botResponse });
       } else {
@@ -176,10 +208,11 @@ export async function addBot(database) {
       }
 
       const errorMessageElement = document.createElement("div");
-      errorMessageElement.className = "chat-message-bot";
+      errorMessageElement.className = "chat-message-model";
       errorMessageElement.textContent =
         "Something went wrong. Please try again.";
       chatbotMessages.appendChild(errorMessageElement);
+      scrollToBottom(chatbotMessages);
 
       await database.addMessage({
         type: "model",
@@ -247,20 +280,4 @@ export function removeBot() {
   chatbotMessages = null;
   chatbotInput = null;
   closeBtn = null;
-}
-
-function copyToClipboard(button) {
-  const tempTextarea = document.createElement("textarea");
-  tempTextarea.value = button.parentElement.querySelector("pre code").innerText;
-  document.body.appendChild(tempTextarea);
-
-  tempTextarea.select();
-  document.execCommand("copy");
-
-  document.body.removeChild(tempTextarea);
-
-  button.innerText = "Copied!";
-  setTimeout(() => {
-    button.innerText = "Copy";
-  }, 1000);
 }

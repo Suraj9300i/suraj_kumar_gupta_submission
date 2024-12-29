@@ -38,7 +38,7 @@ body {
   width: fit-content;
 }
 
-.chat-message-bot {
+.chat-message-model {
   margin: 10px 0;
   padding: 10px;
   border-radius: 8px;
@@ -78,8 +78,7 @@ body {
 
 /* Container for recommendations */
 .recommendation-container {
-  margin: 20px;
-  padding: 20px;
+  padding: 10px;
   background-color: #f8f9fa;
   border-radius: 8px;
   border: 1px solid #dee2e6;
@@ -96,9 +95,10 @@ body {
 
 /* Code block styling */
 .code-block {
+  width: 100%;
   background-color: #2d2d2d;
   color: #f8f8f2;
-  padding: 15px;
+  padding: 7px;
   border-radius: 6px;
   font-size: 14px;
   overflow-x: auto;
@@ -132,13 +132,18 @@ body {
 }
 
 .copy-button {
-  background-color: #4caf50;
+  background-color: #4caf4fbb;
   color: white;
   padding: 5px 10px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
   float: right;
+}
+
+.copy-button.copied {
+  background-color: #4caf50;
+  color: white;
 }
 
 .aiButtonContainer {
