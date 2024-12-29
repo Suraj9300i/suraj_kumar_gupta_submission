@@ -14,7 +14,5 @@ This Chrome extension is designed to assist students by providing real-time solu
 
 The extension uses a combination of HTML, CSS, JavaScript for the frontend, and Node.js along with the Gemini AI model for the backend to process and respond to user queries effectively.
 
-## How It Works
-
 1. Clone the project
 2. Go to extension management in chrome, unpack the folder
