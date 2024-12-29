@@ -1,6 +1,6 @@
 import { getCurrentProblemCode, getProblem } from "./utility.js";
 
-const apiUrl = "http://localhost:3000/chat";
+const apiUrl = "https://ai-doubt-solver.netlify.app/.netlify/functions/api/chat";
 
 function getProblemContext() {
   const problem = getProblem();

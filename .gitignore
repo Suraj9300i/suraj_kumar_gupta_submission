@@ -59,3 +59,6 @@ webpack.config.js
 test/
 # Local Netlify folder
 .netlify
+
+*.pem
+config.json
