@@ -1,4 +1,4 @@
-import { getCurrentProblemCode, getProblem } from "./utility.js";
+import { getCurrentProblemCode, getProblem, removeHTMLTags } from "./utility.js";
 
 const apiUrl = "https://ai-doubt-solver.netlify.app/.netlify/functions/api/chat";
 
@@ -7,9 +7,9 @@ function getProblemContext() {
   const userCode = getCurrentProblemCode();
 
   return {
-    problemExplanation: problem?.data?.body,
-    inputFormat : problem?.data?.input_format,
-    outputFormat : problem?.data?.output_format,
+    problemExplanation: removeHTMLTags(problem?.data?.body),
+    inputFormat : removeHTMLTags(problem?.data?.input_format),
+    outputFormat : removeHTMLTags(problem?.data?.output_format),
     hints : problem?.data?.hints,
     editorial: problem?.data?.hints?.solution_approach,
     correctSolution: problem?.data?.editorial_code[problem.data.editorial_code.length - 1]?.code,

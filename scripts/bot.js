@@ -57,9 +57,11 @@ export async function addBot(database) {
           )
           .join("")}
     `;
+    setTimeout(() => {
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }, 500);
   }
-  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
+  
   // Input
   chatbotInput = document.createElement("div");
   chatbotInput.classList.add("chatbot-input");

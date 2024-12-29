@@ -1,41 +1,20 @@
-# Chrome-Extension-Base-Template
-This is a basic Chrome Extension base template for starting new projects off of initialized with a MIT license.
+# AI-Powered DSA Doubt Solver Extension
+
+This Chrome extension is designed to assist students by providing real-time solutions and debugging assistance for DSA problems. Leveraging advanced AI capabilities via the Gemini model, this extension offers interactive guidance directly within your browser.
 
 ## Features
-- ..
-- ..
-- ..
 
-## Author
-First Last
-- [Author Website]()
-- [Author Github]()
-- [Project Repository]()
+- **Instant DSA Solutions**: Get explanations, optimizations, solutions, and step-by-step debugging help for a DSA problems.
 
-## Requirements
-### Knowledge
-- HTML
-- CSS
-- Javascript
-- Chrome API
-### Tools
-- Google Chrome Browser
-- IDE or Text Editor of Your Choice
+- **Dynamic AI Bot**: The AI Bot adapts to the problem we are solving, changing its approach and the guidance. This ensures that the response we receive is always relevant and tailored to the current problem.
 
-## Setup Instructions
-### For Developers
-1. Make a clone of this project, unzipped.
-2. Open Chrome Browser
-3. In a new or blank tab, type in "chrome://extensions/" (without the quotes of course) and click [Enter].
-4. At the top right corner of the page, **enable** "Developer Mode"
-5. Click the button on the page that says "Load Unpacked"
-6. Navigate to your unzipped project folder and select that and hit OK.
-7. You are now ready to start working on the extension! Just make sure you reload after each change you make to see the changes take place.
+- **Session Management**: All the previous conversations are stored in Indexed DB, allowing us to pick up right where we left off.
 
-### For End Users
-1. ...
-2. ...
-3. ...
+## How It Works
 
-## License
-Please refer to LICENSE file.
+The extension uses a combination of HTML, CSS, JavaScript for the frontend, and Node.js along with the Gemini AI model for the backend to process and respond to user queries effectively.
+
+## How It Works
+
+1. Clone the project
+2. Go to extension management in chrome, unpack the folder

@@ -158,3 +158,7 @@ export function encodeHtml(code) {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
 }
+
+export function removeHTMLTags(htmlString) {
+  return htmlString.replace(/<[^>]*>/g, '');
+}
