@@ -9,9 +9,9 @@ This Chrome extension is designed to assist students by providing real-time solu
   <img width="1502" alt="Screenshot 2024-12-29 at 8 59 48 PM" src="https://github.com/user-attachments/assets/f8c08dcc-21f2-49ca-a2ee-9c3282aca011" />
 
 
-- **Dynamic AI Bot**: The AI Bot adapts to the problem we are solving, changing its approach and the guidance. This ensures that the response we receive is always relevant and tailored to the current problem. 
+- **Dynamic AI Bot**: Whenever we change the problem, the AI bot will reset the conversation. And the new AI Bot will be tailored according to the current problem context, generating more precise response.
   ***Note*** :
-  - Sometimes changing to new problem leads to delay of adding AI button due to adding new store and upgrading indexed db, in this case, it is better to refresh page
+  - Sometimes changing to new problem leads to delay of adding new AI button due to adding a separate store and upgrading indexed db, in this case, it is better to refresh page
   - But moving to previous problems, always reset the conversation and loads the previous conversation
   
 <img width="1500" alt="Screenshot 2024-12-29 at 9 07 12 PM" src="https://github.com/user-attachments/assets/6e2c19f0-4d6d-4441-883c-12c290a5f423" />
