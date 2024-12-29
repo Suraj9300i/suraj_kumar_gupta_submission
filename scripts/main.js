@@ -39,7 +39,6 @@ function checkAndInitOrReset() {
         .catch(err => console.error(err));
     } else if (newProblemName !== currentProblemName) {
       currentProblemName = newProblemName;
-      const db = connectDB(newProblemName);
       removeBot();
 
       connectDB(newProblemName)
